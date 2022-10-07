@@ -1,0 +1,49 @@
+name: Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      context:
+        description: Context
+        required: true
+        type: choice
+        options:
+          - hasura-cli
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push latest
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.context }}
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.context }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ inputs.context }}:latest
