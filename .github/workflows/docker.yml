@@ -8,15 +8,37 @@ on:
         required: true
         type: choice
         options:
-          - hasura-cli:latest
-          - hasura-cli:distroless
+          - hasura-cli
+          - hasura-cli/distroless
+
+      version:
+        description: Version
+        required: true
+        type: string
 
 jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      image_name: ${{ steps.set-var.outputs.image_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - id: set-var
+        run: ./${{ inputs.context }}/metadata.sh
+        env:
+          Image_Version: ${{ inputs.version }}
+
   docker:
+    needs: metadata
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    env:
+      image_name: ${{ needs.metadata.outputs.image_name }}
 
     steps:
       - name: Checkout repository
@@ -45,6 +67,8 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ inputs.version }}
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.context }}
-            ghcr.io/${{ github.repository_owner }}/${{ inputs.context }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.image_name }}
+            ghcr.io/${{ github.repository_owner }}/${{ env.image_name }}

@@ -1,6 +1,9 @@
 FROM buildpack-deps:curl as build
 
-RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+ARG VERSION
+
+RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=$VERSION bash
+
 
 FROM gcr.io/distroless/static
 
