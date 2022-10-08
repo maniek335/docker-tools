@@ -10,6 +10,7 @@ on:
         options:
           - hasura-cli
           - hasura-cli/distroless
+          - hasura-wait4x
 
       version:
         description: Version
