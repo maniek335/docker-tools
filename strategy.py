@@ -10,15 +10,19 @@ matrix = {
 }
 
 if len(sys.argv) > 1:
+    print(f"[DEBUG] Input: {sys.argv[1]}")
+    
     input = json.loads(sys.argv[1])
 
     images = [{
         "context": input.get("context"),
-        "versions": input.get("versions").split(";"),
-        "variants": input.get("variants").split(";")
+        "versions": input.get("versions").split(";") if input.get("versions") else [],
+        "variants": input.get("variants").split(";") if input.get("variants") else []
     }]
 else:
     images = json.load(open("supported.json", "r"))
+
+print(f"[DEBUG] Images: {images}")
 
 for image in images:
     context = image.get("context")
