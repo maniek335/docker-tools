@@ -1,4 +1,5 @@
 import json
+import sys
 
 def imageGenerator(context, version="", variant=""):
     variant = version and variant and f"{version}-{variant}" or version or variant or "latest"
@@ -8,9 +9,18 @@ matrix = {
     "include": []
 }
 
-supported = json.load(open("supported.json", "r"))
+if len(sys.argv) > 1:
+    input = json.loads(sys.argv[1])
 
-for image in supported:
+    images = [{
+        "context": input.get("context"),
+        "versions": input.get("versions").split(";"),
+        "variants": input.get("variants").split(";")
+    }]
+else:
+    images = json.load(open("supported.json", "r"))
+
+for image in images:
     context = image.get("context")
     versions = [""] + image.get("versions", [])
     variants = [""] + image.get("variants", [])
