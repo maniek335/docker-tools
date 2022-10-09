@@ -1,0 +1,11 @@
+[
+  {
+    "context": "hasura-cli",
+    "versions": ["v2.12.0"],
+    "variants": ["distroless", "distroless-nonroot"]
+  },
+  {
+    "context": "hasura-wait4x",
+    "versions": ["v2.12.0"]
+  }
+]

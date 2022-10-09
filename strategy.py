@@ -1,52 +1,27 @@
 import json
 
+def imageGenerator(context, version="", variant=""):
+    variant = version and variant and f"{version}-{variant}" or version or variant or "latest"
+    return f"{context}:{variant}"
 
 matrix = {
-    "include": [
-        {
-            "context": "hasura-cli",
-            "image": "hasura-cli:latest"
-        },
-        {
-            "context": "hasura-cli",
-            "args": "VERSION=v2.12.0\n",
-            "image": "hasura-cli:v2.12.0"
-        },
-
-        {
-            "context": "hasura-cli",
-            "target": "distroless",
-            "image": "hasura-cli:distroless"
-        },
-        {
-            "context": "hasura-cli",
-            "target": "distroless",
-            "args": "v2.12.0\n",
-            "image": "hasura-cli:v2.12.0-distroless"
-        },
-
-        {
-            "context": "hasura-cli",
-            "target": "distroless-nonroot",
-            "image": "hasura-cli:distroless-nonroot"
-        },
-        {
-            "context": "hasura-cli",
-            "target": "distroless-nonroot",
-            "args": "v2.12.0\n",
-            "image": "hasura-cli:v2.12.0-distroless-nonroot"
-        },
-
-        {
-            "context": "hasura-wait4x",
-            "image": "hasura-wait4x:latest"
-        },
-        {
-            "context": "hasura-wait4x",
-            "args": "v2.12.0\n",
-            "image": "hasura-wait4x:v2.12.0"
-        },
-    ]
+    "include": []
 }
+
+supported = json.load(open("supported.json", "r"))
+
+for image in supported:
+    context = image.get("context")
+    versions = [""] + image.get("versions", [])
+    variants = [""] + image.get("variants", [])
+
+    for variant in variants:
+        for version in versions:
+            matrix["include"].append({
+                "context": context,
+                "args": f"VERSION={version}\n" if version else "",
+                "target": variant,
+                "image": imageGenerator(context, version, variant)
+            })
 
 print("::set-output name=matrix::{}".format(json.dumps(matrix)))
