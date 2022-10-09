@@ -10,14 +10,16 @@ matrix = {
 }
 
 if len(sys.argv) > 1:
-    print(f"[DEBUG] Input: {sys.argv[1]}")
+    input = " ".join(sys.argv[1:])
+
+    print(f"[DEBUG] Input: {input}")
     
-    input = json.loads(sys.argv[1])
+    image = json.loads(input)
 
     images = [{
-        "context": input.get("context"),
-        "versions": input.get("versions").split(";") if input.get("versions") else [],
-        "variants": input.get("variants").split(";") if input.get("variants") else []
+        "context": image.get("context"),
+        "versions": image.get("versions").split(";") if image.get("versions") else [],
+        "variants": image.get("variants").split(";") if image.get("variants") else []
     }]
 else:
     images = json.load(open("supported.json", "r"))
