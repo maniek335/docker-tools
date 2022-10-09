@@ -5,7 +5,6 @@ matrix = {
     "include": [
         {
             "context": "hasura-cli",
-            "args": "",
             "image": "hasura-cli:latest"
         },
         {
@@ -15,19 +14,31 @@ matrix = {
         },
 
         {
-            "context": "hasura-cli/distroless",
-            "args": "",
+            "context": "hasura-cli",
+            "target": "distroless",
             "image": "hasura-cli:distroless"
         },
         {
-            "context": "hasura-cli/distroless",
+            "context": "hasura-cli",
+            "target": "distroless",
             "args": "v2.12.0\n",
             "image": "hasura-cli:v2.12.0-distroless"
         },
 
         {
+            "context": "hasura-cli",
+            "target": "distroless-nonroot",
+            "image": "hasura-cli:distroless-nonroot"
+        },
+        {
+            "context": "hasura-cli",
+            "target": "distroless-nonroot",
+            "args": "v2.12.0\n",
+            "image": "hasura-cli:v2.12.0-distroless-nonroot"
+        },
+
+        {
             "context": "hasura-wait4x",
-            "args": "",
             "image": "hasura-wait4x:latest"
         },
         {
