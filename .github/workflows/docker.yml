@@ -1,35 +1,27 @@
 name: Docker
 
+#TODO Add inputs
 on:
   workflow_dispatch:
-    inputs:
-      context:
-        description: Context
-        required: true
-        type: choice
-        options:
-          - hasura-cli
-          - hasura-cli/distroless
-          - hasura-wait4x
-
-      version:
-        description: Version
-        type: string
 
 jobs:
   metadata:
     runs-on: ubuntu-latest
     outputs:
-      image_name: ${{ steps.set-var.outputs.image_name }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - id: set-var
-        run: ./${{ inputs.context }}/metadata.sh
-        env:
-          Image_Version: ${{ inputs.version }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Generate matrix
+        id: set-matrix
+        run: python strategy.py
 
   docker:
     needs: metadata
@@ -37,8 +29,8 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-      image_name: ${{ needs.metadata.outputs.image_name }}
+    strategy:
+      matrix: ${{ fromJSON(needs.metadata.outputs.matrix) }}
 
     steps:
       - name: Checkout repository
@@ -63,12 +55,11 @@ jobs:
       - name: Build and push latest
         uses: docker/build-push-action@v3
         with:
-          context: ${{ inputs.context }}
+          context: ${{ matrix.context }}
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            VERSION=${{ inputs.version }}
+          build-args: ${{ matrix.args }}
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.image_name }}
-            ghcr.io/${{ github.repository_owner }}/${{ env.image_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
