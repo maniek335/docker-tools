@@ -26,6 +26,8 @@ ENV HASURA_GRAPHQL_ENDPOINT=http://hasura:8080
 
 RUN groupadd --gid 1000 hasura && useradd --uid 1000 --gid hasura --shell /bin/bash --create-home hasura
 
+COPY --from=deps /usr/local/bin/hasura /usr/local/bin/hasura
+
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
