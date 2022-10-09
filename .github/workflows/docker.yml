@@ -36,7 +36,11 @@ jobs:
 
       - name: Generate matrix
         id: set-matrix
-        run: python strategy.py ${{ toJSON(github.event.inputs) }}
+        run: python strategy.py
+        env:
+          context: ${{ github.event.inputs.context }}
+          versions: ${{ github.event.inputs.versions }}
+          variants: ${{ github.event.inputs.variants }}
 
   docker:
     needs: metadata
