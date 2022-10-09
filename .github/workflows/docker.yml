@@ -30,6 +30,8 @@ jobs:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
+      max-parallel: 3
       matrix: ${{ fromJSON(needs.metadata.outputs.matrix) }}
 
     steps:
