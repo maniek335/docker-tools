@@ -11,5 +11,8 @@
   {
     "context": "kopia",
     "variants": ["distroless", "distroless-nonroot"]
+  },
+  {
+    "context": "watchtower"
   }
 ]

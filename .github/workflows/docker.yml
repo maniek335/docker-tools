@@ -12,6 +12,7 @@ on:
           - hasura-cli
           - hasura-wait4x
           - kopia
+          - watchtower
       versions:
         description: Versions (separator ";")
         type: string
