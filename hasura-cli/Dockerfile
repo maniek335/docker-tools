@@ -30,5 +30,3 @@ COPY --from=deps /usr/local/bin/hasura /usr/local/bin/hasura
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
-
-CMD [ "hasura" ]
