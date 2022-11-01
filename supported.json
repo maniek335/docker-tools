@@ -1,7 +1,6 @@
 [
   {
     "context": "hasura-cli",
-    "versions": ["v2.12.0"],
     "variants": ["distroless", "distroless-nonroot"]
   },
   {
@@ -11,8 +10,5 @@
   {
     "context": "kopia",
     "variants": ["distroless", "distroless-nonroot"]
-  },
-  {
-    "context": "watchtower"
   }
 ]
