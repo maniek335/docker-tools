@@ -37,7 +37,7 @@ jobs:
 
       - name: Generate matrix
         id: set-matrix
-        run: python strategy.py
+        run: python strategy.py >> $GITHUB_OUTPUT
         env:
           context: ${{ github.event.inputs.context }}
           versions: ${{ github.event.inputs.versions }}

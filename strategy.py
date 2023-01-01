@@ -34,4 +34,4 @@ for image in images:
                 "image": imageGenerator(context, version, variant)
             })
 
-print("::set-output name=matrix::{}".format(json.dumps(matrix)))
+print("matrix={}".format(json.dumps(matrix)))
