@@ -18,8 +18,6 @@ if os.getenv("context"):
 else:
     images = json.load(open("supported.json", "r"))
 
-print(f"[DEBUG] Images: {images}")
-
 for image in images:
     context = image.get("context")
     versions = [""] + image.get("versions", [])
